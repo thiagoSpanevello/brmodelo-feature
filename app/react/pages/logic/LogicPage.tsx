@@ -6,6 +6,7 @@ import PanelTools from "../../components/PanelTools";
 import { LogicIcon } from "../../components/Icons";
 import Feedback, { useFeedback } from "../../components/Feedback";
 import LogicSidebar from "./sidebar/LogicSidebar";
+import DslPanel from "./dsl/DslPanel";
 import { formatDate } from "../../utils/formatDate";
 import loadingDots from "../../../img/loading-dots.gif";
 
@@ -59,6 +60,7 @@ const LogicPage: React.FC<LogicPageProps> = React.memo(({
 	const { feedback, showFeedback, hideFeedback } = useFeedback();
 	const [selectedElement, setSelectedElement] = useState<SelectedElement>(BLANK_SELECTION);
 	const [shapePaletteVisible, setShapePaletteVisible] = useState(true);
+	const [dslPanelVisible, setDslPanelVisible] = useState(false);
 	const [sidebarVisible, setSidebarVisible] = useState(true);
 	const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
@@ -142,6 +144,7 @@ const LogicPage: React.FC<LogicPageProps> = React.memo(({
 
 	const toggleShapePalette = useCallback(() => setShapePaletteVisible(prev => !prev), []);
 	const toggleSidebar = useCallback(() => setSidebarVisible(prev => !prev), []);
+	const toggleDslPanel = useCallback(() => setDslPanelVisible(prev => !prev), []);
 
 	const toolsController = useMemo(() => ({
 		zoomIn: { active: true, action: () => editorRef.current?.zoomIn() },
@@ -336,6 +339,13 @@ const LogicPage: React.FC<LogicPageProps> = React.memo(({
 						onToggleVisible={toggleSidebar}
 						onClearSelection={handleClearSelection}
 						onOpenQueryExpression={onOpenQueryExpression}
+					/>
+
+					<DslPanel
+						editor={editorRef.current}
+						visible={dslPanelVisible}
+						onToggleVisible={toggleDslPanel}
+						showFeedback={showFeedback}
 					/>
 				</section>
 			</section>

@@ -14,6 +14,9 @@
     "node": "24.x",
     "pnpm": "10.x"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@parcel/watcher", "unrs-resolver"]
+  },
   "dependencies": {
     "@babel/runtime": "^7.28.6",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -25,6 +28,8 @@
     "hotkeys-js": "^3.12.0",
     "i18next": "^26.0.3",
     "i18next-browser-languagedetector": "^8.2.0",
+    "moo": "^0.5.3",
+    "nearley": "^2.20.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^16.2.4",
