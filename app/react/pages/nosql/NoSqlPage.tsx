@@ -8,6 +8,7 @@ import Feedback, { useFeedback } from "../../components/Feedback";
 import NoSqlSidebar from "./sidebar/NoSqlSidebar";
 import { formatDate } from "../../utils/formatDate";
 import loadingDots from "../../../img/loading-dots.gif";
+import DslPanel from "./dsl/DslPanel";
 
 interface Model {
 	id: string;
@@ -51,6 +52,7 @@ const NoSqlPage: React.FC<NoSqlPageProps> = React.memo(({
 	const { feedback, showFeedback, hideFeedback } = useFeedback();
 	const [selectedElement, setSelectedElement] = useState<SelectedElement>(BLANK_SELECTION);
 	const [focusedRowPath, setFocusedRowPath] = useState<number[] | null>(null);
+	const [dslPanelVisible, setDslPanelVisible] = useState(false);
 	const [shapePaletteVisible, setShapePaletteVisible] = useState(true);
 	const [sidebarVisible, setSidebarVisible] = useState(true);
 	const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
@@ -132,6 +134,7 @@ const NoSqlPage: React.FC<NoSqlPageProps> = React.memo(({
 
 	const toggleShapePalette = useCallback(() => setShapePaletteVisible(prev => !prev), []);
 	const toggleSidebar = useCallback(() => setSidebarVisible(prev => !prev), []);
+	const toggleDslPanel = useCallback(() => setDslPanelVisible(prev => !prev), []);
 
 	const toolsController = useMemo(() => ({
 		zoomIn: { active: true, action: () => editorRef.current?.zoomIn() },
@@ -308,22 +311,30 @@ const NoSqlPage: React.FC<NoSqlPageProps> = React.memo(({
 
 
 				<section id="content" className="pseudo-canvas" ref={contentRef}>
-					<section
-						className={`elements-panel floatingPanel${shapePaletteVisible ? " open" : ""}`}
-						id="shape-palette"
-					>
-						<button
-							type="button"
-							className="toggle-visibility"
-							aria-label="Toggle elements panel"
-							onClick={toggleShapePalette}
+					<div className="left-panels">
+						<section
+							className={`elements-panel floatingPanel${shapePaletteVisible ? " open" : ""}`}
+							id="shape-palette"
 						>
-							<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path fillRule="evenodd" clipRule="evenodd" d="M4.55806 14.8169C4.80214 15.061 5.19786 15.061 5.44194 14.8169L10 10.2589L14.5581 14.8169C14.8021 15.061 15.1979 15.061 15.4419 14.8169C15.686 14.5729 15.686 14.1771 15.4419 13.9331L10.4419 8.93306C10.1979 8.68898 9.80214 8.68898 9.55806 8.93306L4.55806 13.9331C4.31398 14.1771 4.31398 14.5729 4.55806 14.8169Z" fill="white"/>
-								<path fillRule="evenodd" clipRule="evenodd" d="M3 6.5C3 6.77614 3.22386 7 3.5 7L16.5 7C16.7761 7 17 6.77614 17 6.5C17 6.22386 16.7761 6 16.5 6L3.5 6C3.22386 6 3 6.22386 3 6.5Z" fill="white"/>
-							</svg>
-						</button>
-					</section>
+							<button
+								type="button"
+								className="toggle-visibility"
+								aria-label="Toggle elements panel"
+								onClick={toggleShapePalette}
+							>
+								<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path fillRule="evenodd" clipRule="evenodd" d="M4.55806 14.8169C4.80214 15.061 5.19786 15.061 5.44194 14.8169L10 10.2589L14.5581 14.8169C14.8021 15.061 15.1979 15.061 15.4419 14.8169C15.686 14.5729 15.686 14.1771 15.4419 13.9331L10.4419 8.93306C10.1979 8.68898 9.80214 8.68898 9.55806 8.93306L4.55806 13.9331C4.31398 14.1771 4.31398 14.5729 4.55806 14.8169Z" fill="white"/>
+									<path fillRule="evenodd" clipRule="evenodd" d="M3 6.5C3 6.77614 3.22386 7 3.5 7L16.5 7C16.7761 7 17 6.77614 17 6.5C17 6.22386 16.7761 6 16.5 6L3.5 6C3.22386 6 3 6.22386 3 6.5Z" fill="white"/>
+								</svg>
+							</button>
+						</section>
+
+						<DslPanel
+							getEditor={() => editorRef.current}
+							visible={dslPanelVisible}
+							onToggleVisible={toggleDslPanel}
+						/>
+					</div>
 
 					<NoSqlSidebar
 						selectedElement={selectedElement}

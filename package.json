@@ -4,9 +4,9 @@
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
-    "run:fe": "export NODE_ENV=development && webpack-dev-server --hot --progress --color",
-    "build": "export NODE_ENV=production && rimraf ./app/dist && webpack --progress --color",
-    "build:analyze": "export NODE_ENV=production ANALYZE=true && rimraf ./app/dist && webpack --progress --color",
+    "run:fe": "cross-env NODE_ENV=development webpack-dev-server --hot --progress --color", 
+    "build": "cross-env NODE_ENV=production rimraf ./app/dist && webpack --progress --color", 
+    "build:analyze": "cross-env NODE_ENV=production ANALYZE=true rimraf ./app/dist && webpack --progress --color",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
@@ -15,7 +15,10 @@
     "pnpm": "10.x"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@parcel/watcher", "unrs-resolver"]
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "unrs-resolver"
+    ]
   },
   "dependencies": {
     "@babel/runtime": "^7.28.6",
@@ -55,6 +58,7 @@
     "@typescript-eslint/parser": "^8.52.0",
     "autoprefixer": "10.4.21",
     "babel-loader": "^10.0.0",
+    "cross-env": "^10.1.0",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "cssnano": "7.1.3",

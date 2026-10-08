@@ -448,6 +448,9 @@ nosql.Collection = dia.Element.define('nosql.Collection', {
 			maxCardinality: data.maxCardinality != null ? data.maxCardinality : 1
 		};
 		if (data.identifier) attr.identifier = true;
+		if (data.notNull) attr.notNull = true;
+		if (data.unique) attr.unique = true;
+		if (data.defaultValue !== undefined) attr.defaultValue = data.defaultValue;
 		return attr;
 	},
 
@@ -720,10 +723,16 @@ nosql.Collection = dia.Element.define('nosql.Collection', {
 			return base;
 		}
 		const type = row.type || '';
+		const badges = [];
+		if (row.notNull) badges.push('NN');
+		if (row.unique) badges.push('UQ');
+		if (row.defaultValue !== undefined) badges.push('= ' + row.defaultValue);
+		const suffix = badges.length ? '  ' + badges.join(' ') : '';
+
 		if (row.cardinalityEnabled) {
-			return type + ' (' + (row.minCardinality ?? 0) + ',' + (row.maxCardinality ?? 1) + ')';
+			return type + ' (' + (row.minCardinality ?? 0) + ',' + (row.maxCardinality ?? 1) + ')' + suffix;
 		}
-		return type;
+		return type + suffix;
 	},
 
 	_estimateTextWidth: function(text, fontSize) {
