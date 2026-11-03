@@ -3,6 +3,7 @@ import nearley from "nearley";
 import grammar from "./grammar.js";
 import SemanticAnalyzer from "./semanticAnalyzer";
 import DiagramGenerator from "./diagramGenerator";
+import { diagramToDSL } from "./diagramToDsl";
 
 interface DslPanelProps {
 	getEditor: () => any;
@@ -73,6 +74,16 @@ const DslPanel: React.FC<DslPanelProps> = ({ getEditor, visible, onToggleVisible
 		applyDsl(e.target.value);
 	};
 
+	const handleImportFromDiagram = () => {
+		const editor = getEditor();
+		if (!editor) {
+			setError("Editor ainda não carregou");
+			return;
+		}
+		setCode(diagramToDSL(editor));
+		setError(null);
+	};
+
 	return (
 		<section className={`floatingPanel dsl-panel${visible ? " open" : ""}`} id="dsl-editor">
 			<button type="button" className="toggle-visibility" aria-label="Toggle DSL panel" onClick={onToggleVisible}>
@@ -81,6 +92,11 @@ const DslPanel: React.FC<DslPanelProps> = ({ getEditor, visible, onToggleVisible
 
 			{visible && (
 				<div className="dsl-panel-content">
+					<div className="dsl-panel-actions">
+						<button type="button" className="br-button small" onClick={handleImportFromDiagram}>
+							Importar do diagrama
+						</button>
+					</div>
 					<textarea value={code} onChange={handleChange} spellCheck={false} placeholder={PLACEHOLDER} />
 					{error && <div className="dsl-panel-error">{error}</div>}
 				</div>
